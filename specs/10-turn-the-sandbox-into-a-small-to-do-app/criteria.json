@@ -1,0 +1,12 @@
+{
+  "acceptance_criteria": [
+    {"id": "AC1", "text": "A caller can sign up, sign in and sign out; invalid sign-up input, duplicate emails (case-insensitive) and bad credentials return 4xx with a JSON message, and a signed-out session stops working.", "verify_by": "command"},
+    {"id": "AC2", "text": "Every list and item route returns 401 and changes nothing when there is no valid session.", "verify_by": "command"},
+    {"id": "AC3", "text": "A second user gets 404 when reading, changing or deleting the first user's lists or items, and never sees them in list results.", "verify_by": "command"},
+    {"id": "AC4", "text": "Lists and items can be created, renamed or edited, ticked and unticked, and deleted; deleting a list deletes its items; items are returned in saved order.", "verify_by": "command"},
+    {"id": "AC5", "text": "An item is reported overdue only when its due date is before today (UTC) and it is not done; an item due today is not overdue.", "verify_by": "command"},
+    {"id": "AC6", "text": "Moving an item keeps positions gap-free with other items in relative order, and the order persists after the database is reopened.", "verify_by": "command"},
+    {"id": "AC7", "text": "Invalid input (empty or over-long text, impossible dates, bad positions) returns 4xx with a JSON message and changes nothing.", "verify_by": "command"},
+    {"id": "AC8", "text": "The README documents a single command to start the service locally and a single command to run the tests, and both work on a fresh clone with no external services.", "verify_by": "review"}
+  ]
+}
