@@ -1,0 +1,14 @@
+{
+  "acceptance_criteria": [
+    {"id": "AC1", "text": "Scoring gives 0 for wrong or missing answers and 500 plus round(500 × remaining ÷ limit) for correct ones, never rewarding a slower correct answer more, and ranks ties equally in join order.", "verify_by": "command"},
+    {"id": "AC2", "text": "A question closes at its time limit or when all connected players have answered, answers cannot be changed or submitted late, and disconnected players do not block closing.", "verify_by": "command"},
+    {"id": "AC3", "text": "Joining validates room code and nickname (trimmed, 1–20 characters, unique ignoring case), refuses joins after the game starts, and refuses the 51st player.", "verify_by": "command"},
+    {"id": "AC4", "text": "Over WebSocket, a host and players can play a full game from lobby through question, reveal (correct answer, answer spread, scores) and podium, with the correct answer withheld until reveal.", "verify_by": "command"},
+    {"id": "AC5", "text": "A disconnected player can rejoin by token or by the same nickname and keeps their score and answered state, while a connected player's nickname cannot be taken over.", "verify_by": "command"},
+    {"id": "AC6", "text": "The bundled sample quiz passes validation and malformed quiz files are rejected without stopping the server.", "verify_by": "command"},
+    {"id": "AC7", "text": "Malformed, out-of-order or wrong-role messages are ignored without crashing the server or altering game state.", "verify_by": "command"},
+    {"id": "AC8", "text": "A game with 50 simulated players completes with every client receiving each reveal within 1 second.", "verify_by": "command"},
+    {"id": "AC9", "text": "Running npm start in quiz/ serves the host page with a room code and scannable QR code, and a phone can join and play the sample quiz.", "verify_by": "ui_flow"},
+    {"id": "AC10", "text": "All files live under quiz/ with their own package.json, nothing outside quiz/ is changed, and nickname and quiz text are rendered as plain text, never as HTML.", "verify_by": "review"}
+  ]
+}
