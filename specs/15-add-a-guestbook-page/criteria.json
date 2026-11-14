@@ -1,0 +1,49 @@
+{
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "text": "A name of 1 to 50 characters and a message of 1 to 500 characters (after trimming, counted as visible characters) are accepted; empty, whitespace-only, 51-character names and 501-character messages are rejected, on submission as well as in the form.",
+      "verify_by": "command"
+    },
+    {
+      "id": "AC2",
+      "text": "Messages are listed newest first, 20 per page, with working Older/Newer links, a page number in the URL, clamping of out-of-range or invalid page numbers, and an empty-state message when there are none.",
+      "verify_by": "command"
+    },
+    {
+      "id": "AC3",
+      "text": "Message and name text containing HTML or Markdown is displayed literally and escaped, never executed or interpreted; line breaks in messages are preserved.",
+      "verify_by": "command"
+    },
+    {
+      "id": "AC4",
+      "text": "A valid submission is stored, redirects to a confirmation, clears the form and isn't resubmitted on reload; an invalid one keeps the typed text, shows errors beside the fields and stores nothing.",
+      "verify_by": "command"
+    },
+    {
+      "id": "AC5",
+      "text": "With the recommended spam controls, a submission with the hidden honeypot filled isn't stored, and submissions over the rate limit are refused with a try-again-later message that keeps the typed text.",
+      "verify_by": "command"
+    },
+    {
+      "id": "AC6",
+      "text": "Stored messages survive a restart, concurrent submissions are all stored, and a storage failure shows a plain unavailable message without technical details.",
+      "verify_by": "command"
+    },
+    {
+      "id": "AC7",
+      "text": "All guestbook code lives in guestbook/ and the change doesn't add to, edit or depend on anything outside that folder, including the to-do app from #10.",
+      "verify_by": "review"
+    },
+    {
+      "id": "AC8",
+      "text": "The page can be used by keyboard alone and on a narrow phone screen without sideways scrolling, with labelled fields and announced errors and confirmation.",
+      "verify_by": "ui_flow"
+    },
+    {
+      "id": "AC9",
+      "text": "The owner's answers to the five open decisions (moderation, data kept, spam, storage, who can read) are recorded in guestbook/README.md and the implementation matches them.",
+      "verify_by": "review"
+    }
+  ]
+}
