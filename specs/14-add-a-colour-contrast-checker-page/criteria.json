@@ -1,0 +1,39 @@
+{
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "text": "The contrast ratio follows the WCAG 2.2 formula and is shown truncated to two decimals as N.NN:1 (black on white shows 21.00:1; a ratio just under 4.5 never shows 4.50).",
+      "verify_by": "command"
+    },
+    {
+      "id": "AC2",
+      "text": "AA and AAA results for normal and large text pass or fail against 4.5, 3, 7 and 4.5 using the exact ratio, and each shows the word Pass or Fail.",
+      "verify_by": "command"
+    },
+    {
+      "id": "AC3",
+      "text": "Each colour can be set by typing hex (#rgb or #rrggbb, with or without #) or with the colour picker, and the two controls stay in sync; an invalid hex shows an error and keeps the last valid results.",
+      "verify_by": "ui_flow"
+    },
+    {
+      "id": "AC4",
+      "text": "The page lives only in contrast/ as static files with no build step and no external scripts, fonts or stylesheets, and no file outside contrast/ changes.",
+      "verify_by": "review"
+    },
+    {
+      "id": "AC5",
+      "text": "Every control can be reached and used with the keyboard alone, with a visible focus indicator.",
+      "verify_by": "ui_flow"
+    },
+    {
+      "id": "AC6",
+      "text": "Inputs have labels, errors are linked to their fields, and the ratio and results are in a polite live region, so a screen reader announces updates.",
+      "verify_by": "review"
+    },
+    {
+      "id": "AC7",
+      "text": "A sample with normal and large text is shown in the chosen colours, the page's own controls keep fixed colours, and the page has no horizontal scrolling at 320px width.",
+      "verify_by": "ui_flow"
+    }
+  ]
+}
