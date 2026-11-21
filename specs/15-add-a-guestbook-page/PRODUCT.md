@@ -2,19 +2,19 @@
 
 ## Summary
 
-A page in the sandbox where visitors leave a name and a short plain-text message, and anyone allowed to read it can see the messages left so far, newest first. It is standalone: it lives in `guestbook/` and doesn't depend on or change the to-do app (#10).
+A page in the sandbox where visitors leave a name and a short plain-text message. Messages are shown to everyone only after the owner approves them, newest first. It is standalone: it lives in `guestbook/` and doesn't depend on or change the to-do app (#10).
 
-Five decisions belong to the owner and are open (see the **Open question** entries). The behaviour below holds whichever way they go. Where an answer changes behaviour, the invariant says so and gives the recommended default as an assumption.
+The owner has settled the five decisions: moderation before display, what is kept (and for how long), spam controls, storage, and who can read. They are written into the behaviour below. Choosing and setting up a host is out of scope: the guestbook only has to run locally.
 
 ## Behavior
 
-1. The guestbook page shows a list of messages and a form with a name field and a message field, plus a submit button. Each field has a visible label.
+1. The guestbook page shows a list of approved messages and a form with a name field and a message field, plus a submit button. Each field has a visible label.
 
 2. Each listed message shows the name, the message text and the time it was left. Messages are ordered newest first. Messages with the same timestamp keep a stable order between page loads.
 
 3. The list shows 20 messages per page. When there are more than 20, the page offers "Older" and "Newer" navigation. The first page is the default, and the current page is part of the URL so it can be linked and reloaded. A page number beyond the last page shows the last page. A non-numeric or zero page number shows the first page.
 
-4. When there are no messages, the page shows a friendly empty-state line and the form, not an error.
+4. When there are no approved messages, the page shows a friendly empty-state line and the form, not an error.
 
 5. Name limits: required, plain text, at most 50 characters. Message limits: required, plain text, at most 500 characters. Leading and trailing whitespace is trimmed before checking, and a value that is empty after trimming is rejected. Exactly 50 and exactly 500 characters are accepted; 51 and 501 are rejected. Characters are counted as visible characters (a user-perceived character, such as an emoji, counts as one).
 
@@ -24,24 +24,20 @@ Five decisions belong to the owner and are open (see the **Open question** entri
 
 8. Messages are plain text. Anything that looks like HTML or Markdown is shown literally and never interpreted or executed. Line breaks in a message are shown as line breaks. Names can't contain line breaks.
 
-9. After a successful submission the visitor sees a clear confirmation. The form is cleared. Reloading the page doesn't submit the message a second time. Under the recommended default for moderation, the new message is visible at once.
-   - **Open question (moderation):** do messages appear at once, or only after you approve them? If you approve them, how? *Recommendation:* appear at once, and you can hide or delete any message afterwards through a simple owner-only action protected by a secret. Reason: this keeps the page feeling alive, and approval-first needs an owner inbox and a notification route that the sandbox doesn't yet have. If you choose approval-first, the visitor sees "Thanks, your message will appear once it's approved" instead, and the message isn't listed until approved.
+9. **Moderation.** A new message is not shown when it is sent. It waits as pending until the owner approves it. After a successful submission the visitor sees "Thanks, your message will appear once it's approved." and the form is cleared. Reloading the page doesn't submit the message a second time. A pending message is not listed on any page, in any count, or in any way to visitors.
 
-10. A visitor can't edit or delete their own message once it is sent. *Assumption, tied to the open question below.*
-    - **Open question (what is kept about visitors):** only name and message, or an email address too, and for how long? Can visitors delete their own message? *Recommendation:* keep only the name, the message and the time. No email, no account, and nothing else about the visitor is shown or kept beyond what spam control (the next question) needs. Keep messages until you remove them. Don't let visitors delete: with no accounts there is no safe way to prove who wrote what. A visitor who wants a message removed can ask you, and you remove it by the owner action in invariant 9.
+10. **Owner page.** The owner has a page, separate from the public one, listing pending messages. For each the owner can approve it or delete it. Approving makes it appear on the public page, ordered by the time it was left, not the time of approval. Deleting removes it for good. The page is only available to someone who supplies the owner's secret token. Without a correct token it shows nothing about any message, and no change is possible. If no token has been configured, the owner page is disabled. **Proposed:** the owner page can also delete an already-approved message, so the owner can remove one later on request.
 
-11. Spam is limited so that a script can't flood the page.
-    - **Open question (spam):** hidden honeypot field plus a rate limit, a CAPTCHA, or your approval alone? *Recommendation:* a hidden honeypot field plus a rate limit (for example 3 messages per 10 minutes per visitor), with no CAPTCHA. Reason: it costs nothing, adds no third-party script and no friction for people. Revisit if spam appears.
-    - Under that recommendation: a submission with the honeypot filled looks successful to the sender but isn't stored. A visitor over the rate limit is told to try again later, keeps what they typed and nothing is stored. The honeypot is invisible and skipped by keyboard and screen-reader users.
+11. **What is kept.** Only the name, the message and the time it was left are kept for each message. No email, no account, and nothing else about the visitor is stored. Messages (pending or approved) are deleted automatically 12 months after they were left. Visitors can't edit or delete their own message once it is sent.
 
-12. Who can read the guestbook is decided by the owner.
-    - **Open question (who can read):** everyone, or only people who have the link? *Recommendation:* everyone. "Anyone can read the messages left so far" is the issue's purpose, and a link-only page is hard to keep private anyway. If link-only, the page is unlisted and carries a no-index signal, and the link must not be shown in any public index.
+12. **Spam.** A hidden honeypot field plus a rate limit of 3 messages per 10 minutes per visitor. No CAPTCHA. A submission with the honeypot filled looks successful to the sender (same confirmation) but isn't stored. A visitor over the rate limit is told to try again later, keeps what they typed, and nothing is stored. The honeypot is invisible and skipped by keyboard and screen-reader users. What identifies a visitor for the rate limit is not kept after the 10-minute window, and is never stored with a message.
 
-13. Storage persists across restarts and deployments: a message left now is still listed after the service restarts. If storage is unavailable, reading shows a plain "The guestbook is unavailable right now" message and submission shows a retry-later error that keeps the typed text. Neither exposes technical details.
-    - **Open question (storage):** a small backend or a hosted service, at no cost. *Recommendation:* a single small backend with a file-based database (SQLite) on a free-tier host that offers persistent disk, or failing that a free hosted database tier. The owner should choose from what they already have an account for. Reason: one component, no vendor sign-up for visitors, and a file is easy to back up.
+13. **Who can read.** Everyone: the public page needs no link secret, login or token, and may be indexed.
 
-14. The page is usable by keyboard alone and by screen readers: the form controls are labelled, errors are announced, the confirmation is announced, and pagination links are real links. It works on a narrow phone screen without sideways scrolling.
+14. **Storage.** Messages are kept in SQLite behind one small Node backend, and persist across restarts: a message left now is still there after the service restarts. It runs locally with documented steps. If storage is unavailable, reading shows a plain "The guestbook is unavailable right now" message, and submission shows a retry-later error that keeps the typed text. Neither exposes technical details.
 
-15. The guestbook is self-contained: all its code and assets live in `guestbook/`, and nothing outside that folder (including anything for the to-do app) is added to, changed or required by it.
+15. The page is usable by keyboard alone and by screen readers: the form controls are labelled, errors are announced, the confirmation is announced, and pagination links are real links. It works on a narrow phone screen without sideways scrolling. The owner page meets the same standard.
 
-16. Two visitors submitting at nearly the same moment both have their messages stored, and neither overwrites the other.
+16. The guestbook is self-contained: all its code and assets live in `guestbook/`, and nothing outside that folder (including anything for the to-do app) is added to, changed or required by it.
+
+17. Two visitors submitting at nearly the same moment both have their messages stored, and neither overwrites the other.

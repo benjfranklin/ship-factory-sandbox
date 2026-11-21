@@ -2,12 +2,12 @@
   "acceptance_criteria": [
     {
       "id": "AC1",
-      "text": "A name of 1 to 50 characters and a message of 1 to 500 characters (after trimming, counted as visible characters) are accepted; empty, whitespace-only, 51-character names and 501-character messages are rejected, on submission as well as in the form.",
+      "text": "A name of 1 to 50 characters and a message of 1 to 500 characters (after trimming, counted as visible characters) are accepted; empty, whitespace-only, 51-character names and 501-character messages are rejected, on a direct submission as well as in the form. A rejected submission keeps the typed text, shows errors beside the fields and stores nothing.",
       "verify_by": "command"
     },
     {
       "id": "AC2",
-      "text": "Messages are listed newest first, 20 per page, with working Older/Newer links, a page number in the URL, clamping of out-of-range or invalid page numbers, and an empty-state message when there are none.",
+      "text": "Approved messages are listed newest first, 20 per page, with working Older/Newer links, a page number in the URL, clamping of out-of-range or invalid page numbers, and an empty-state message when there are none.",
       "verify_by": "command"
     },
     {
@@ -17,33 +17,38 @@
     },
     {
       "id": "AC4",
-      "text": "A valid submission is stored, redirects to a confirmation, clears the form and isn't resubmitted on reload; an invalid one keeps the typed text, shows errors beside the fields and stores nothing.",
+      "text": "A valid submission is stored as pending and not shown publicly; the visitor is redirected to a page saying \"Thanks, your message will appear once it's approved.\", the form is cleared, and reloading doesn't resubmit it. Pending messages appear in no public list or count.",
       "verify_by": "command"
     },
     {
       "id": "AC5",
-      "text": "With the recommended spam controls, a submission with the hidden honeypot filled isn't stored, and submissions over the rate limit are refused with a try-again-later message that keeps the typed text.",
+      "text": "The owner page, protected by a secret token, lists pending messages and lets the owner approve or delete each one. Approving makes the message appear publicly, ordered by when it was left; deleting removes it. Without a correct token nothing is shown or changed, and with no token configured the owner page is disabled.",
       "verify_by": "command"
     },
     {
       "id": "AC6",
-      "text": "Stored messages survive a restart, concurrent submissions are all stored, and a storage failure shows a plain unavailable message without technical details.",
+      "text": "Only name, message, time and approval status are stored for a message. Messages, pending or approved, older than 12 months are deleted automatically (at startup and daily), while younger ones are kept. Visitors have no way to edit or delete their message.",
       "verify_by": "command"
     },
     {
       "id": "AC7",
-      "text": "All guestbook code lives in guestbook/ and the change doesn't add to, edit or depend on anything outside that folder, including the to-do app from #10.",
-      "verify_by": "review"
+      "text": "A submission with the hidden honeypot filled looks successful but isn't stored. The fourth submission by one visitor within 10 minutes is refused with a try-again-later message that keeps the typed text, and is accepted after the window passes. There is no CAPTCHA.",
+      "verify_by": "command"
     },
     {
       "id": "AC8",
-      "text": "The page can be used by keyboard alone and on a narrow phone screen without sideways scrolling, with labelled fields and announced errors and confirmation.",
-      "verify_by": "ui_flow"
+      "text": "Messages are stored in SQLite and survive a restart, concurrent submissions are all stored, and a storage failure shows a plain unavailable message without technical details. The service runs locally by following guestbook/README.md; no hosting setup is required.",
+      "verify_by": "command"
     },
     {
       "id": "AC9",
-      "text": "The owner's answers to the five open decisions (moderation, data kept, spam, storage, who can read) are recorded in guestbook/README.md and the implementation matches them.",
+      "text": "All guestbook code lives in guestbook/ and the change doesn't add to, edit or depend on anything outside that folder (apart from specs/), including the to-do app from #10. The public page needs no token or secret link to read.",
       "verify_by": "review"
+    },
+    {
+      "id": "AC10",
+      "text": "The public page and the owner page can be used by keyboard alone and on a narrow phone screen without sideways scrolling, with labelled fields and announced errors and confirmation.",
+      "verify_by": "ui_flow"
     }
   ]
 }
